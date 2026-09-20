@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukuki Arabuluculuk Ön Başvuru Portalı | 6325 Sayılı HUAK</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #172554;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --gold: #d97706;
+            --success: #15803d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text-main); line-height: 1.5; padding: 32px 16px; min-height: 100vh; }
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .header {
+            text-align: center; margin-bottom: 24px; background: white; padding: 30px 20px;
+            border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            position: relative; overflow: hidden;
+        }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gold); }
+        .header-badge {
+            display: inline-block; background: #fef3c7; color: #92400e;
+            font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;
+        }
+        .header h1 { font-size: 1.6rem; color: var(--secondary); margin-bottom: 8px; font-weight: 800; }
+        .header p { font-size: 0.9rem; color: var(--text-muted); max-width: 680px; margin: 0 auto; }
+
+        .card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 26px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+        .card-title {
+            font-size: 1.05rem; font-weight: 700; color: var(--secondary); margin-bottom: 18px;
+            display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: span 2; }
+        label { font-size: 0.83rem; font-weight: 600; color: #334155; }
+        label span.req { color: #dc2626; }
+
+        input, select, textarea {
+            width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.88rem; outline: none; background: #f8fafc; color: var(--text-main);
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1); }
+        textarea { min-height: 90px; resize: vertical; }
+
+        .claims-box {
+            background: #f1f5f9; border-radius: 8px; padding: 16px; margin-top: 10px;
+        }
+        .claim-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; margin-top: 8px; }
+        .claim-checks label { display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer; }
+
+        .btn-submit {
+            width: 100%; background: var(--primary); color: white; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-submit:hover { background: var(--primary-hover); }
+
+        .result-box {
+            display: none; background: white; border: 2px solid #bfdbfe; border-radius: 12px;
+            padding: 32px 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        .official-sheet {
+            border: 2px solid #1e293b; padding: 28px; border-radius: 8px; background: #fff; margin-top: 20px;
+            font-family: 'Times New Roman', Times, serif; line-height: 1.6; font-size: 1rem;
+        }
+        .official-title { text-align: center; font-weight: bold; font-size: 1.25rem; margin-bottom: 18px; text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full { grid-column: span 1; }
+            .claim-checks { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-badge">6325 VE 7036 SAYILI KANUNLAR UYARINCA</div>
+        <h1>Hukuki Arabuluculuk Başvuru Portalı</h1>
+        <p>İş hukuku, ticari alacaklar, kira tahliyesi ve tüketici uyuşmazlıklarında dava şartı ve ihtiyari arabuluculuk süreçlerini başlatın ve resmi başvuru formunu edinin.</p>
+    </div>
+
+    <form id="arbForm" onsubmit="handleArbSubmit(event)">
+        <!-- 1. Başvuran Taraf -->
+        <div class="card">
+            <h2 class="card-title">👤 1. Başvuran Taraf (Talep Eden) Bilgileri</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Başvuru Sıfatı <span class="req">*</span></label>
+                    <select id="applicantRole" required>
+                        <option value="İşçi / Çalışan">İşçi / Çalışan</option>
+                        <option value="İşveren / Şirket">İşveren / Şirket</option>
+                        <option value="Kiracı">Kiracı</option>
+                        <option value="Kiraya Veren (Mülk Sahibi)">Kiraya Veren (Mülk Sahibi)</option>
+                        <option value="Alacaklı / Tedarikçi">Alacaklı / Tedarikçi</option>
+                        <option value="Tüketici">Tüketici</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Adı Soyadı / Şirket Unvanı <span class="req">*</span></label>
+                    <input type="text" id="applicantName" required placeholder="Başvuran kişi veya tüzel kişi unvanı">
+                </div>
+                <div class="form-group">
+                    <label>TCKN / VKN <span class="req">*</span></label>
+                    <input type="text" id="applicantId" required placeholder="11 haneli TCKN veya 10 haneli VKN" maxlength="11">
+                </div>
+                <div class="form-group">
+                    <label>İletişim Telefonu <span class="req">*</span></label>
+                    <input type="tel" id="applicantPhone" required placeholder="05XX XXX XX XX">
+                </div>
+                <div class="form-group">
+                    <label>E-Posta / KEP Adresi</label>
+                    <input type="text" id="applicantEmail" placeholder="ornek@domain.com veya basvuran@hs01.kep.tr">
+                </div>
+                <div class="form-group">
+                    <label>İkametgah / Şirket Adresi <span class="req">*</span></label>
+                    <input type="text" id="applicantAddress" required placeholder="Tebligat adresi">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Karşı Taraf -->
+        <div class="card">
+            <h2 class="card-title">🏢 2. Karşı Taraf (Aleyhine Başvurulan) Bilgileri</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Karşı Taraf Adı Soyadı / Şirket Unvanı <span class="req">*</span></label>
+                    <input type="text" id="respondentName" required placeholder="Karşı kişi veya firma unvanı">
+                </div>
+                <div class="form-group">
+                    <label>Karşı Taraf TCKN / VKN (Biliniyorsa)</label>
+                    <input type="text" id="respondentId" placeholder="Bilinmiyorsa boş bırakınız" maxlength="11">
+                </div>
+                <div class="form-group">
+                    <label>Karşı Taraf Telefonu</label>
+                    <input type="tel" id="respondentPhone" placeholder="0212... veya 05XX...">
+                </div>
+                <div class="form-group">
+                    <label>Karşı Taraf KEP Adresi (Varsa)</label>
+                    <input type="text" id="respondentKep" placeholder="karsitaraf@hs01.kep.tr">
+                </div>
+                <div class="form-group full">
+                    <label>Karşı Taraf Tebligat Adresi / İşyeri Adresi <span class="req">*</span></label>
+                    <input type="text" id="respondentAddress" required placeholder="Karşı tarafa resmi arabuluculuk davetiyesinin ulaştırılacağı tam adres">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Uyuşmazlık Konusu ve Talepler -->
+        <div class="card">
+            <h2 class="card-title">⚖️ 3. Uyuşmazlık Konusu, Talepler ve Alacak Tutarı</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Uyuşmazlık Alanı <span class="req">*</span></label>
+                    <select id="disputeType" required onchange="handleDisputeTypeChange()">
+                        <option value="İş Hukuku (İşçi - İşveren)">İş Hukuku (İşçi - İşveren Uyuşmazlığı)</option>
+                        <option value="Ticari Uyuşmazlık">Ticari Uyuşmazlık (TTK m. 5/A)</option>
+                        <option value="Kira ve Kat Mülkiyeti">Kira ve Kat Mülkiyeti (Tahliye / Kira Tespiti)</option>
+                        <option value="Tüketici Uyuşmazlığı">Tüketici Hukuku Uyuşmazlığı</option>
+                        <option value="Diğer Hukuki Uyuşmazlık">Diğer İhtiyari Hukuki Uyuşmazlık</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Başvuru Türü <span class="req">*</span></label>
+                    <select id="applicationCategory" required>
+                        <option value="Dava Şartı (Zorunlu) Arabuluculuk">Dava Şartı (Zorunlu) Arabuluculuk</option>
+                        <option value="İhtiyari (Gönüllü) Arabuluculuk">İhtiyari (Gönüllü) Arabuluculuk</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Tahmini Toplam Uyuşmazlık / Talep Tutarı (TL) <span class="req">*</span></label>
+                    <input type="number" step="0.01" id="claimAmount" required placeholder="0.00 (Belirsiz ise yaklaşık tutar giriniz)">
+                </div>
+            </div>
+
+            <!-- İş Hukuku Kalemleri -->
+            <div class="claims-box" id="claimsSection">
+                <label style="font-weight: 700; color: #1e293b;">Talep Edilen Uyuşmazlık Kalemleri:</label>
+                <div class="claim-checks" id="claimsCheckboxList">
+                    <label><input type="checkbox" name="claim_item" value="Kıdem Tazminatı"> Kıdem Tazminatı</label>
+                    <label><input type="checkbox" name="claim_item" value="İhbar Tazminatı"> İhbar Tazminatı</label>
+                    <label><input type="checkbox" name="claim_item" value="Fazla Mesai Ücreti"> Fazla Mesai Ücreti</label>
+                    <label><input type="checkbox" name="claim_item" value="Yıllık Ücretli İzin"> Yıllık Ücretli İzin</label>
+                    <label><input type="checkbox" name="claim_item" value="UBGT (Ulusal Bayram ve Genel Tatil)"> UBGT Alacağı</label>
+                    <label><input type="checkbox" name="claim_item" value="Ödenmeyen Ücret / Maaş"> Ödenmeyen Ücret</label>
+                    <label><input type="checkbox" name="claim_item" value="İşe İade Talebi"> İşe İade Talebi</label>
+                    <label><input type="checkbox" name="claim_item" value="Maddi / Manevi Tazminat"> Maddi / Manevi Tazminat</label>
+                </div>
+            </div>
+
+            <div class="form-group full" style="margin-top: 16px;">
+                <label>Uyuşmazlığın Kısa Özeti ve Talepleriniz <span class="req">*</span></label>
+                <textarea id="disputeSummary" required placeholder="Olayların özeti, çalışma tarihleri veya kira başlangıç tarihi, karşı tarafça yerine getirilmeyen yükümlülükler..."></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+            <span>⚖️ Arabuluculuk Başvurusunu Tamamla & Resmi Tutanağı Al</span>
+        </button>
+    </form>
+
+    <!-- Success View -->
+    <div class="result-box" id="resultBox">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 2.8rem; margin-bottom: 8px;">⚖️</div>
+            <h2 style="color: var(--secondary);">Arabuluculuk Başvurunuz Alındı</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Dosyanız açılmıştır. 6325 sayılı Kanun gereğince arabuluculuk davet süreci başlatılacaktır.
+            </p>
+            <div style="margin: 14px 0; font-size: 1.25rem; font-weight: 800; color: var(--primary);" id="trackingCodeDisplay">ARB-2026-0000</div>
+        </div>
+
+        <div class="official-sheet" id="printSheet">
+            <div class="official-title">ARABULUCULUK BAŞVURU FORMU VE TALEPLER TUTANAĞI<br><span style="font-size: 0.9rem; font-weight: normal;">(6325 Sayılı HUAK ve İlgili Mevzuat Uyarınca)</span></div>
+            
+            <p><b>BAŞVURU NO:</b> <span id="prTrackingCode"></span></p>
+            <p><b>BAŞVURU TÜRÜ:</b> <span id="prAppType"></span> - <span id="prDisputeType"></span></p>
+            <br>
+            <p><b>BAŞVURAN (TALEP EDEN):</b> <span id="prApplicantName"></span> (<span id="prApplicantRole"></span>)</p>
+            <p><b>TCKN / VKN:</b> <span id="prApplicantId"></span></p>
+            <p><b>İLETİŞİM / TEBLİGAT ADRESİ:</b> <span id="prApplicantContact"></span> | <span id="prApplicantAddress"></span></p>
+            <br>
+            <p><b>KARŞI TARAF:</b> <span id="prRespondentName"></span></p>
+            <p><b>TCKN / VKN:</b> <span id="prRespondentId"></span></p>
+            <p><b>TEBLİGAT ADRESİ:</b> <span id="prRespondentAddress"></span></p>
+            <p><b>TELEFON / KEP:</b> <span id="prRespondentContact"></span></p>
+            <br>
+            <p><b>TALEP EDİLEN TOPLAM TUTAR:</b> <span id="prClaimAmount"></span> TL</p>
+            <p><b>TALEP KALEMLERİ:</b> <span id="prClaimItems"></span></p>
+            <br>
+            <p><b>UYUŞMAZLIK ÖZETİ VE AÇIKLAMALAR:</b></p>
+            <p style="text-indent: 24px; margin-top: 6px;" id="prSummary"></p>
+            <br>
+            <p>
+                Yukarıda detayları yazılı uyuşmazlığın 6325 sayılı Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu kapsamında arabuluculuk yoluyla çözümlenmesi amacıyla işbu başvuruyu tanzim ettiğimi, karşı tarafa arabuluculuk davetiyesinin tebliğ edilerek ilk oturum tarihinin belirlenmesini talep ederim.
+            </p>
+            <br><br>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div><b>Başvuru Tarihi:</b> <span id="prDate"></span></div>
+                <div style="text-align: right;">
+                    <b>Başvuran / Vekili</b><br>
+                    <span id="prSigner"></span><br>
+                    İmza / E-İmza
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: center; gap: 12px;">
+            <button class="btn-submit" style="width: auto; padding: 10px 22px; background: #0f172a;" onclick="window.print()">🖨️ Başvuru Formunu Yazdır / PDF</button>
+            <button class="btn-submit" style="width: auto; padding: 10px 22px; background: #e2e8f0; color: #334155;" onclick="location.reload()">➕ Yeni Başvuru</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleDisputeTypeChange() {
+    const val = document.getElementById('disputeType').value;
+    const cBox = document.getElementById('claimsCheckboxList');
+    if (val.includes('Kira')) {
+        cBox.innerHTML = `
+            <label><input type="checkbox" name="claim_item" value="Kira Tahliyesi (Taşınmazın Boşaltılması)"> Kira Tahliyesi</label>
+            <label><input type="checkbox" name="claim_item" value="Kira Bedeli Tespiti (Kira Artışı)"> Kira Bedeli Tespiti</label>
+            <label><input type="checkbox" name="claim_item" value="Ödenmeyen Kira Alacağı"> Ödenmeyen Kira Alacağı</label>
+            <label><input type="checkbox" name="claim_item" value="Aidat / Ortak Gider Alacağı"> Aidat / Ortak Gider</label>
+            <label><input type="checkbox" name="claim_item" value="Depozito İadesi"> Depozito İadesi</label>
+            <label><input type="checkbox" name="claim_item" value="Hasar ve Tazminat"> Hasar ve Tazminat</label>
+        `;
+    } else if (val.includes('Ticari')) {
+        cBox.innerHTML = `
+            <label><input type="checkbox" name="claim_item" value="Cari Hesap Alacağı"> Cari Hesap Alacağı</label>
+            <label><input type="checkbox" name="claim_item" value="Fatura Bedeli Alacağı"> Fatura Bedeli Alacağı</label>
+            <label><input type="checkbox" name="claim_item" value="Sözleşmeden Doğan Tazminat"> Sözleşmeden Doğan Cezai Şart</label>
+            <label><input type="checkbox" name="claim_item" value="Çek / Senet Alacağı"> Çek / Senet Alacağı</label>
+            <label><input type="checkbox" name="claim_item" value="Teslim Edilmeyen Emtia"> Ayıplı / Teslim Edilmeyen Mal</label>
+        `;
+    } else {
+        cBox.innerHTML = `
+            <label><input type="checkbox" name="claim_item" value="Kıdem Tazminatı"> Kıdem Tazminatı</label>
+            <label><input type="checkbox" name="claim_item" value="İhbar Tazminatı"> İhbar Tazminatı</label>
+            <label><input type="checkbox" name="claim_item" value="Fazla Mesai Ücreti"> Fazla Mesai Ücreti</label>
+            <label><input type="checkbox" name="claim_item" value="Yıllık Ücretli İzin"> Yıllık Ücretli İzin</label>
+            <label><input type="checkbox" name="claim_item" value="UBGT Alacağı"> UBGT Alacağı</label>
+            <label><input type="checkbox" name="claim_item" value="Ödenmeyen Maaş"> Ödenmeyen Maaş</label>
+            <label><input type="checkbox" name="claim_item" value="İşe İade Talebi"> İşe İade Talebi</label>
+        `;
+    }
+}
+
+async function handleArbSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerText = '⏳ Kaydediliyor...';
+
+    const selectedClaims = Array.from(document.querySelectorAll('input[name="claim_item"]:checked')).map(el => el.value);
+
+    const payload = {
+        applicant_role: document.getElementById('applicantRole').value,
+        applicant_name: document.getElementById('applicantName').value.trim(),
+        applicant_id: document.getElementById('applicantId').value.trim(),
+        applicant_phone: document.getElementById('applicantPhone').value.trim(),
+        applicant_email: document.getElementById('applicantEmail').value.trim(),
+        applicant_address: document.getElementById('applicantAddress').value.trim(),
+        respondent_name: document.getElementById('respondentName').value.trim(),
+        respondent_id: document.getElementById('respondentId').value.trim(),
+        respondent_phone: document.getElementById('respondentPhone').value.trim(),
+        respondent_kep: document.getElementById('respondentKep').value.trim(),
+        respondent_address: document.getElementById('respondentAddress').value.trim(),
+        dispute_type: document.getElementById('disputeType').value,
+        application_category: document.getElementById('applicationCategory').value,
+        claim_amount: parseFloat(document.getElementById('claimAmount').value) || 0,
+        claim_items: selectedClaims.join(', '),
+        dispute_summary: document.getElementById('disputeSummary').value.trim(),
+        created_at: new Date().toISOString()
+    };
+
+    let trackingCode = 'ARB-2026-' + Math.floor(1000 + Math.random() * 9000);
+
+    try {
+        const res = await fetch('/api/arabuluculuk-basvur', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.tracking_code) trackingCode = data.tracking_code;
+        }
+    } catch (err) {
+        const local = JSON.parse(localStorage.getItem('arabuluculuk_basvurular') || '[]');
+        payload.tracking_code = trackingCode;
+        local.push(payload);
+        localStorage.setItem('arabuluculuk_basvurular', JSON.stringify(local));
+    }
+
+    document.getElementById('arbForm').style.display = 'none';
+    document.getElementById('resultBox').style.display = 'block';
+    document.getElementById('trackingCodeDisplay').innerText = trackingCode;
+
+    // Fill sheet
+    document.getElementById('prTrackingCode').innerText = trackingCode;
+    document.getElementById('prAppType').innerText = payload.application_category;
+    document.getElementById('prDisputeType').innerText = payload.dispute_type;
+    document.getElementById('prApplicantName').innerText = payload.applicant_name;
+    document.getElementById('prApplicantRole').innerText = payload.applicant_role;
+    document.getElementById('prApplicantId').innerText = payload.applicant_id;
+    document.getElementById('prApplicantContact').innerText = `${payload.applicant_phone} | ${payload.applicant_email || '-'}`;
+    document.getElementById('prApplicantAddress').innerText = payload.applicant_address;
+    document.getElementById('prRespondentName').innerText = payload.respondent_name;
+    document.getElementById('prRespondentId').innerText = payload.respondent_id || 'Belirtilmedi';
+    document.getElementById('prRespondentAddress').innerText = payload.respondent_address;
+    document.getElementById('prRespondentContact').innerText = `${payload.respondent_phone || '-'} | ${payload.respondent_kep || '-'}`;
+    document.getElementById('prClaimAmount').innerText = payload.claim_amount.toLocaleString('tr-TR', { minimumFractionDigits: 2 });
+    document.getElementById('prClaimItems').innerText = payload.claim_items || 'Genel Uyuşmazlık';
+    document.getElementById('prSummary').innerText = payload.dispute_summary;
+    document.getElementById('prDate').innerText = new Date().toLocaleDateString('tr-TR');
+    document.getElementById('prSigner').innerText = payload.applicant_name;
+}
+</script>
+
+</body>
+</html>

@@ -79,6 +79,19 @@ python scripts/test_arabuluculuk.py
 
 ---
 
+## 🌐 LegalTech & E-Dönüşüm Açık Kaynak Ekosistemi
+
+Bu başvuru portali, [@eimza-kep](https://github.com/eimza-kep) açık kaynak ekosisteminin LegalTech arabuluculuk modülüdür. İlgili diğer araçlar:
+
+* ⚖️ [avukat-hukuk-excel-hesaplamalari](https://github.com/eimza-kep/avukat-hukuk-excel-hesaplamalari) - Arabuluculuk ücret tarifesi, AAÜT ve icra kapak hesabı şablonları.
+* 📄 [udf2md](https://github.com/eimza-kep/udf2md) - Arabuluculuk son tutanaklarını (.udf) Markdown ve JSON'a dönüştürücü.
+* 📝 [javascript-udf-editor](https://github.com/eimza-kep/uyap-web-udf-editor) - Java gerektirmeyen web UDF belge görüntüleyici ve düzenleyici.
+* 🛠️ [uyap-editor-hizli-onarim](https://github.com/eimza-kep/uyap-editor-hizli-onarim) - UYAP Editör donma ve Java bellek onarım aracı.
+* 🌟 [awesome-turkiye-e-donusum](https://github.com/eimza-kep/awesome-turkiye-e-donusum) - Türkiye e-Dönüşüm açık kaynak araçları ve kütüphaneleri kürasyonu.
+
+---
+
 ## ⚖️ Lisans
 
 Bu proje [MIT Lisansı](LICENSE) kapsamında açık kaynak olarak sunulmuştur.
+
